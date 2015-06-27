@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8121.20" systemVersion="15A204h" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8101.16"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <mutableArray key="AppleSDGothicNeo.ttc">
+            <string>AppleSDGothicNeo-UltraLight</string>
+            <string>AppleSDGothicNeo-UltraLight</string>
+        </mutableArray>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CenterVC" customModule="DVBeautySlide" customModuleProvider="target">
+            <connections>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Qa-cN-HAv">
+                    <rect key="frame" x="210" y="238" width="180" height="55"/>
+                    <animations/>
+                    <color key="backgroundColor" red="0.11924399468640577" green="0.6824466211501059" blue="0.76693390052356025" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="55" id="5ck-jC-6e6"/>
+                        <constraint firstAttribute="width" constant="180" id="qWa-Sa-Rm5"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="AppleSDGothicNeo-UltraLight" family="Apple SD Gothic Neo" pointSize="28"/>
+                    <state key="normal" title="Touch">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="touchAction:" destination="-1" eventType="touchUpInside" id="oJk-f6-jRQ"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZuK-jy-zzz">
+                    <rect key="frame" x="210" y="307" width="180" height="55"/>
+                    <animations/>
+                    <color key="backgroundColor" red="0.11924399469999999" green="0.68244662119999999" blue="0.76693390049999999" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="55" id="g1o-pe-rN4"/>
+                        <constraint firstAttribute="width" constant="180" id="pBy-Oq-ug5"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="AppleSDGothicNeo-UltraLight" family="Apple SD Gothic Neo" pointSize="28"/>
+                    <state key="normal" title="Press">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                </button>
+            </subviews>
+            <animations/>
+            <color key="backgroundColor" red="0.21132256894413551" green="0.77878792371525074" blue="0.83597840314136129" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstItem="3Qa-cN-HAv" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="0lu-y3-bny"/>
+                <constraint firstItem="3Qa-cN-HAv" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" constant="-34.5" id="2fA-ud-n5t"/>
+                <constraint firstItem="ZuK-jy-zzz" firstAttribute="top" secondItem="3Qa-cN-HAv" secondAttribute="bottom" constant="14" id="Uko-pQ-dwM"/>
+                <constraint firstItem="ZuK-jy-zzz" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="jNf-XI-7ad"/>
+            </constraints>
+            <point key="canvasLocation" x="240" y="377"/>
+        </view>
+    </objects>
+</document>
