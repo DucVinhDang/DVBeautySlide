@@ -118,10 +118,15 @@ class DVBeautySlideController: UIViewController {
     private func addCenterVC() {
         if centerVC != nil {
             centerVC.view.frame = view.frame
-            centerVC.view.autoresizingMask = UIViewAutoresizing.FlexibleWidth
             self.addChildViewController(centerVC)
             self.view.addSubview(centerVC.view)
             centerVC.didMoveToParentViewController(self)
+            
+            centerVC.view.translatesAutoresizingMaskIntoConstraints = false
+            view.addConstraint(NSLayoutConstraint(item: centerVC.view, attribute: .Top, relatedBy: .Equal, toItem: view, attribute: .Top, multiplier: 1.0, constant: 0.0))
+            view.addConstraint(NSLayoutConstraint(item: centerVC.view, attribute: .Bottom, relatedBy: .Equal, toItem: view, attribute: .Bottom, multiplier: 1.0, constant: 0.0))
+            view.addConstraint(NSLayoutConstraint(item: centerVC.view, attribute: .Left, relatedBy: .Equal, toItem: view, attribute: .Left, multiplier: 1.0, constant: 0.0))
+            view.addConstraint(NSLayoutConstraint(item: centerVC.view, attribute: .Right, relatedBy: .Equal, toItem: view, attribute: .Right, multiplier: 1.0, constant: 0.0))
         }
     }
     
@@ -201,12 +206,12 @@ class DVBeautySlideController: UIViewController {
     private func analysingCurrentPositionOfPanel(canSlide: Bool) {
         if canSlide {
             if slideLiveState == .MovingLeftPanel {
-                animationPanelToNewOriginX(leftVC!.view, posX: 0, showPanel: true, animate: true)
+                animatePanelToNewOriginX(leftVC!.view, posX: 0, showPanel: true, animate: true)
             } else if slideLiveState == .MovingRightPanel {
                 if UIDevice.currentDevice().orientation.isLandscape.boolValue {
-                    animationPanelToNewOriginX(rightVC!.view, posX: distanceOffset + view.bounds.width - view.bounds.height, showPanel: true, animate: true)
+                    animatePanelToNewOriginX(rightVC!.view, posX: distanceOffset + view.bounds.width - view.bounds.height, showPanel: true, animate: true)
                 } else if UIDevice.currentDevice().orientation.isPortrait.boolValue {
-                    animationPanelToNewOriginX(rightVC!.view, posX: distanceOffset, showPanel: true, animate: true)
+                    animatePanelToNewOriginX(rightVC!.view, posX: distanceOffset, showPanel: true, animate: true)
                 }
             }
         } else {
@@ -214,7 +219,7 @@ class DVBeautySlideController: UIViewController {
         }
     }
     
-    private func animationPanelToNewOriginX(panelView: UIView, posX: CGFloat, showPanel: Bool, animate: Bool) {
+    private func animatePanelToNewOriginX(panelView: UIView, posX: CGFloat, showPanel: Bool, animate: Bool) {
         UIView.animateWithDuration(timeInterval, animations: {
             if showPanel {
                 var newDistanceForCenter: CGFloat = 0
@@ -260,12 +265,12 @@ class DVBeautySlideController: UIViewController {
     private func hidePanel() {
         if slideLiveState == .MovingLeftPanel {
             if UIDevice.currentDevice().orientation.isLandscape.boolValue {
-                animationPanelToNewOriginX(leftVC!.view, posX: -(view.bounds.height - distanceOffset), showPanel: false, animate: true)
+                animatePanelToNewOriginX(leftVC!.view, posX: -(view.bounds.height - distanceOffset), showPanel: false, animate: true)
             } else if UIDevice.currentDevice().orientation.isPortrait.boolValue {
-                animationPanelToNewOriginX(leftVC!.view, posX: -(view.bounds.width - distanceOffset), showPanel: false, animate: true)
+                animatePanelToNewOriginX(leftVC!.view, posX: -(view.bounds.width - distanceOffset), showPanel: false, animate: true)
             }
         } else if slideLiveState == .MovingRightPanel {
-            animationPanelToNewOriginX(rightVC!.view, posX: view.bounds.width, showPanel: false, animate: true)
+            animatePanelToNewOriginX(rightVC!.view, posX: view.bounds.width, showPanel: false, animate: true)
         }
     }
     
@@ -284,7 +289,7 @@ class DVBeautySlideController: UIViewController {
     func animationLeftPanel() {
         if slideLiveState == .None {
             slideLiveState = .MovingLeftPanel
-            animationPanelToNewOriginX(leftVC!.view, posX: 0, showPanel: true, animate: true)
+            animatePanelToNewOriginX(leftVC!.view, posX: 0, showPanel: true, animate: true)
         } else {
             hideCurrentPanel()
         }
@@ -294,9 +299,9 @@ class DVBeautySlideController: UIViewController {
         if slideLiveState == .None {
             slideLiveState == .MovingRightPanel
             if UIDevice.currentDevice().orientation.isLandscape.boolValue {
-                animationPanelToNewOriginX(rightVC!.view, posX: distanceOffset + view.bounds.width - view.bounds.height, showPanel: true, animate: true)
+                animatePanelToNewOriginX(rightVC!.view, posX: distanceOffset + view.bounds.width - view.bounds.height, showPanel: true, animate: true)
             } else if UIDevice.currentDevice().orientation.isPortrait.boolValue {
-                animationPanelToNewOriginX(rightVC!.view, posX: distanceOffset, showPanel: true, animate: true)
+                animatePanelToNewOriginX(rightVC!.view, posX: distanceOffset, showPanel: true, animate: true)
             }
         } else {
             hideCurrentPanel()
