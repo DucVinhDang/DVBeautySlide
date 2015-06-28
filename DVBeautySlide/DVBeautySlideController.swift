@@ -34,7 +34,7 @@ class DVBeautySlideController: UIViewController {
     
     let deviceWidth = UIScreen.mainScreen().bounds.width
     let deviceHeight = UIScreen.mainScreen().bounds.height
-    let distanceOffset: CGFloat = 80.0
+    let distanceOffset: CGFloat = 70.0
     let timeInterval: NSTimeInterval = 0.5
     let shadowValue: Float = 0.7
     
@@ -99,15 +99,19 @@ class DVBeautySlideController: UIViewController {
     override func willRotateToInterfaceOrientation(toInterfaceOrientation: UIInterfaceOrientation, duration: NSTimeInterval) {
         if toInterfaceOrientation.isLandscape {
             if(slideCurrentState == .Right) {
-                rightVC?.view.frame.origin.x = view.bounds.height - rightVC!.view.bounds.width
+                animateViewToNewOriginX(rightVC!.view, posX: view.bounds.height - rightVC!.view.bounds.width, animate: true)
+                //rightVC?.view.frame.origin.x = view.bounds.height - rightVC!.view.bounds.width
             } else {
-                rightVC?.view.frame.origin.x = view.bounds.height
+                animateViewToNewOriginX(rightVC!.view, posX: view.bounds.height, animate: true)
+                //rightVC?.view.frame.origin.x = view.bounds.height
             }
         } else if toInterfaceOrientation.isPortrait {
             if(slideCurrentState == .Right) {
-                rightVC?.view.frame.origin.x = distanceOffset
+                animateViewToNewOriginX(rightVC!.view, posX: distanceOffset, animate: true)
+                //rightVC?.view.frame.origin.x = distanceOffset
             } else {
-                rightVC?.view.frame.origin.x = view.bounds.height
+                animateViewToNewOriginX(rightVC!.view, posX: view.bounds.height, animate: true)
+                //rightVC?.view.frame.origin.x = view.bounds.height
             }
         }
     }
@@ -122,19 +126,15 @@ class DVBeautySlideController: UIViewController {
             self.view.addSubview(centerVC.view)
             centerVC.didMoveToParentViewController(self)
             
-            centerVC.view.translatesAutoresizingMaskIntoConstraints = false
-            view.addConstraint(NSLayoutConstraint(item: centerVC.view, attribute: .Top, relatedBy: .Equal, toItem: view, attribute: .Top, multiplier: 1.0, constant: 0.0))
-            view.addConstraint(NSLayoutConstraint(item: centerVC.view, attribute: .Bottom, relatedBy: .Equal, toItem: view, attribute: .Bottom, multiplier: 1.0, constant: 0.0))
-            view.addConstraint(NSLayoutConstraint(item: centerVC.view, attribute: .Left, relatedBy: .Equal, toItem: view, attribute: .Left, multiplier: 1.0, constant: 0.0))
-            view.addConstraint(NSLayoutConstraint(item: centerVC.view, attribute: .Right, relatedBy: .Equal, toItem: view, attribute: .Right, multiplier: 1.0, constant: 0.0))
+            addConstraintForCenterVC()
         }
     }
     
     private func addLeftVC() {
         if leftVC != nil {
+            leftVC?.view.frame = CGRectMake(-(view.bounds.width - distanceOffset), 0, view.bounds.width - distanceOffset, view.bounds.height)
             leftVC?.view.translatesAutoresizingMaskIntoConstraints = true
             leftVC?.view.autoresizingMask = UIViewAutoresizing.FlexibleHeight
-            leftVC?.view.frame = CGRectMake(-(view.bounds.width - distanceOffset), 0, view.bounds.width - distanceOffset, view.bounds.height)
             self.addChildViewController(leftVC!)
             self.view.addSubview(leftVC!.view)
             leftVC?.didMoveToParentViewController(self)
@@ -143,9 +143,9 @@ class DVBeautySlideController: UIViewController {
     
     private func addRightVC() {
         if rightVC != nil {
+            rightVC?.view.frame = CGRectMake(view.bounds.width, 0, view.bounds.width - distanceOffset, view.bounds.height)
             rightVC?.view.translatesAutoresizingMaskIntoConstraints = true
             rightVC?.view.autoresizingMask = UIViewAutoresizing.FlexibleHeight
-            rightVC?.view.frame = CGRectMake(view.bounds.width, 0, view.bounds.width - distanceOffset, view.bounds.height)
             self.addChildViewController(rightVC!)
             self.view.addSubview(rightVC!.view)
             rightVC?.didMoveToParentViewController(self)
@@ -262,6 +262,13 @@ class DVBeautySlideController: UIViewController {
         })
     }
     
+    private func animateViewToNewOriginX(currentView: UIView, posX: CGFloat, animate: Bool) {
+        UIView.animateWithDuration(0.3, animations: {
+            currentView.frame.origin.x = posX
+            }, completion: { finished in
+        })
+    }
+    
     private func hidePanel() {
         if slideLiveState == .MovingLeftPanel {
             if UIDevice.currentDevice().orientation.isLandscape.boolValue {
@@ -272,6 +279,16 @@ class DVBeautySlideController: UIViewController {
         } else if slideLiveState == .MovingRightPanel {
             animatePanelToNewOriginX(rightVC!.view, posX: view.bounds.width, showPanel: false, animate: true)
         }
+    }
+    
+    // MARK: - Autolayout Methods
+    
+    private func addConstraintForCenterVC() {
+        centerVC.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addConstraint(NSLayoutConstraint(item: centerVC.view, attribute: .Top, relatedBy: .Equal, toItem: view, attribute: .Top, multiplier: 1.0, constant: 0.0))
+        view.addConstraint(NSLayoutConstraint(item: centerVC.view, attribute: .Bottom, relatedBy: .Equal, toItem: view, attribute: .Bottom, multiplier: 1.0, constant: 0.0))
+        view.addConstraint(NSLayoutConstraint(item: centerVC.view, attribute: .Left, relatedBy: .Equal, toItem: view, attribute: .Left, multiplier: 1.0, constant: 0.0))
+        view.addConstraint(NSLayoutConstraint(item: centerVC.view, attribute: .Right, relatedBy: .Equal, toItem: view, attribute: .Right, multiplier: 1.0, constant: 0.0))
     }
     
     // MARK: - Supporting Methods
@@ -297,7 +314,7 @@ class DVBeautySlideController: UIViewController {
     
     func animationRightPanel() {
         if slideLiveState == .None {
-            slideLiveState == .MovingRightPanel
+            slideLiveState = .MovingRightPanel
             if UIDevice.currentDevice().orientation.isLandscape.boolValue {
                 animatePanelToNewOriginX(rightVC!.view, posX: distanceOffset + view.bounds.width - view.bounds.height, showPanel: true, animate: true)
             } else if UIDevice.currentDevice().orientation.isPortrait.boolValue {

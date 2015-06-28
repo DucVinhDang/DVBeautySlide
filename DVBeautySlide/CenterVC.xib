@@ -49,6 +49,9 @@
                     <state key="normal" title="Press">
                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
+                    <connections>
+                        <action selector="pressAction:" destination="-1" eventType="touchUpInside" id="9qz-5T-nGF"/>
+                    </connections>
                 </button>
             </subviews>
             <animations/>

@@ -33,6 +33,9 @@ class CenterVC: UIViewController {
         toggleLeftPanel()
     }
 
+    @IBAction func pressAction(sender: AnyObject) {
+        toggleRightPanel()
+    }
     /*
     // MARK: - Navigation
 
