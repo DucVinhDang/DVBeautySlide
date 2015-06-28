@@ -100,6 +100,7 @@ class DVBeautySlideController: UIViewController {
         if toInterfaceOrientation.isLandscape {
             if(slideCurrentState == .Right) {
                 animateViewToNewOriginX(rightVC!.view, posX: view.bounds.height - rightVC!.view.bounds.width, animate: true)
+                animateViewToNewOriginX(centerVC.view, posX: -300, animate: true)
                 //rightVC?.view.frame.origin.x = view.bounds.height - rightVC!.view.bounds.width
             } else {
                 animateViewToNewOriginX(rightVC!.view, posX: view.bounds.height, animate: true)
@@ -178,8 +179,10 @@ class DVBeautySlideController: UIViewController {
             if slideLiveState != .None {
                 if slideLiveState == .MovingLeftPanel && leftVC?.view.frame.origin.x <= 0 {
                     leftVC?.view.frame.origin.x += panGesture.translationInView(view).x
-                } else if slideLiveState == .MovingRightPanel && rightVC?.view.frame.origin.x >= distanceOffset {
-                    rightVC?.view.frame.origin.x += panGesture.translationInView(view).x
+                } else if slideLiveState == .MovingRightPanel {
+                    if (UIDevice.currentDevice().orientation.isPortrait.boolValue && rightVC?.view.frame.origin.x >= distanceOffset) || (UIDevice.currentDevice().orientation.isLandscape.boolValue && rightVC?.view.frame.origin.x >= distanceOffset + view.bounds.width - view.bounds.height) {
+                        rightVC?.view.frame.origin.x += panGesture.translationInView(view).x
+                    }
                 }
                 centerVC.view.frame.origin.x += panGesture.translationInView(view).x/2
                 panGesture.setTranslation(CGPointZero, inView: view)
@@ -224,15 +227,29 @@ class DVBeautySlideController: UIViewController {
             if showPanel {
                 var newDistanceForCenter: CGFloat = 0
                 if self.slideLiveState == .MovingLeftPanel {
-                    newDistanceForCenter =  CGFloat(abs(Int(CGRectGetMinX(self.leftVC!.view.frame)/2)))
-                    self.centerVC.view.frame.origin.x += newDistanceForCenter
+                    if self.slideCurrentState != .Left {
+                        newDistanceForCenter =  CGFloat(abs(Int(CGRectGetMinX(self.leftVC!.view.frame)/2)))
+                        self.centerVC.view.frame.origin.x += newDistanceForCenter
+                    } else {
+                        self.centerVC.view.frame.origin.x = self.leftVC!.view.frame.width/2
+                    }
                 } else if self.slideLiveState == .MovingRightPanel {
                     if UIDevice.currentDevice().orientation.isLandscape.boolValue {
-                        newDistanceForCenter = CGFloat(abs(Int((self.distanceOffset + self.view.bounds.width - self.view.bounds.height) - CGRectGetMinX(self.rightVC!.view.frame))/2))
+                        if self.slideCurrentState != .Right {
+                            newDistanceForCenter = CGFloat(abs(Int((self.distanceOffset + self.view.bounds.width - self.view.bounds.height) - CGRectGetMinX(self.rightVC!.view.frame))/2))
+                            self.centerVC.view.frame.origin.x -= newDistanceForCenter
+                        } else {
+                            self.centerVC.view.frame.origin.x = -(self.rightVC!.view.frame.width/2)
+                        }
                     } else if UIDevice.currentDevice().orientation.isPortrait.boolValue {
-                        newDistanceForCenter = CGFloat(abs(Int(self.distanceOffset - CGRectGetMinX(self.rightVC!.view.frame))/2))
+                        if self.slideCurrentState != .Right {
+                            newDistanceForCenter = CGFloat(abs(Int(self.distanceOffset - CGRectGetMinX(self.rightVC!.view.frame))/2))
+                            self.centerVC.view.frame.origin.x -= newDistanceForCenter
+                        } else {
+                            self.centerVC.view.frame.origin.x = -(self.rightVC!.view.frame.width/2)
+                        }
                     }
-                    self.centerVC.view.frame.origin.x -= newDistanceForCenter
+                    
                 }
                 
             } else {
