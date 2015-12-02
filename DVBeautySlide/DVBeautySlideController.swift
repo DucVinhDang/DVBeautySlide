@@ -174,19 +174,28 @@ class DVBeautySlideController: UIViewController {
                     slideLiveState = .MovingRightPanel
                     //addShadowOpacityToView(currentView: rightVC!.view, shadowValue: shadowValue)
                 }
+            } else {
+                if slideLiveState == .MovingLeftPanel {
+                    if moveFromLeftToRight && leftVC?.view.frame.origin.x >= 0 { return }
+                } else {
+                    if !moveFromLeftToRight && rightVC?.view.frame.origin.x <= distanceOffset { return }
+                }
             }
             break
         case .Changed:
             if slideLiveState != .None {
                 if slideLiveState == .MovingLeftPanel && leftVC?.view.frame.origin.x <= 0 {
                     leftVC?.view.frame.origin.x += panGesture.translationInView(view).x
+                    centerVC.view.frame.origin.x += panGesture.translationInView(view).x/2
+                    panGesture.setTranslation(CGPointZero, inView: view)
                 } else if slideLiveState == .MovingRightPanel {
                     if (UIDevice.currentDevice().orientation.isPortrait.boolValue && rightVC?.view.frame.origin.x >= distanceOffset) || (UIDevice.currentDevice().orientation.isLandscape.boolValue && rightVC?.view.frame.origin.x >= distanceOffset + view.bounds.width - view.bounds.height) {
                         rightVC?.view.frame.origin.x += panGesture.translationInView(view).x
+                        centerVC.view.frame.origin.x += panGesture.translationInView(view).x/2
+                        panGesture.setTranslation(CGPointZero, inView: view)
                     }
                 }
-                centerVC.view.frame.origin.x += panGesture.translationInView(view).x/2
-                panGesture.setTranslation(CGPointZero, inView: view)
+                
             }
             break
         case .Ended:
