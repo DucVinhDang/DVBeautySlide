@@ -10,33 +10,26 @@ import UIKit
 
 class DVBeautySlideController: UIViewController {
     
-    enum SlideCurrentState {
-        case None
-        case Left
-        case Right
-    }
-    
     enum SlideLiveState {
         case None
         case MovingLeftPanel
         case MovingRightPanel
     }
     
-    // Variables
+    // MARK: - Variables
     
-    weak var centerVC: UIViewController!
-    weak var leftVC: UIViewController?
-    weak var rightVC: UIViewController?
+    private weak var centerVC: UIViewController!
+    private weak var leftVC: UIViewController?
+    private weak var rightVC: UIViewController?
     
-    weak var panGesture: UIPanGestureRecognizer?
-    var slideCurrentState: SlideCurrentState = .None
-    var slideLiveState: SlideLiveState = .None
+    private weak var panGesture: UIPanGestureRecognizer?
+    private var slideLiveState: SlideLiveState = .None
     
-    let deviceWidth = UIScreen.mainScreen().bounds.width
-    let deviceHeight = UIScreen.mainScreen().bounds.height
-    let distanceOffset: CGFloat = 70.0
-    let timeInterval: NSTimeInterval = 0.5
-    let shadowValue: Float = 0.7
+    private let deviceWidth = UIScreen.mainScreen().bounds.width
+    private let deviceHeight = UIScreen.mainScreen().bounds.height
+    private let distanceOffset: CGFloat = 70.0
+    private let timeInterval: NSTimeInterval = 0.5
+    private let shadowValue: Float = 0.7
     
     // MARK: - Init Methods
     
@@ -91,33 +84,6 @@ class DVBeautySlideController: UIViewController {
         self.view.autoresizingMask = [UIViewAutoresizing.FlexibleHeight, UIViewAutoresizing.FlexibleWidth]
         // Do any additional setup after loading the view.
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-//    override func willRotateToInterfaceOrientation(toInterfaceOrientation: UIInterfaceOrientation, duration: NSTimeInterval) {
-//        if toInterfaceOrientation.isLandscape {
-//            if(slideCurrentState == .Right) {
-//                animateViewToNewOriginX(rightVC!.view, posX: view.bounds.height - rightVC!.view.bounds.width, animate: true)
-//                animateViewToNewOriginX(centerVC.view, posX: -300, animate: true)
-//                //rightVC?.view.frame.origin.x = view.bounds.height - rightVC!.view.bounds.width
-//            } else {
-//                animateViewToNewOriginX(rightVC!.view, posX: view.bounds.height, animate: true)
-//                //rightVC?.view.frame.origin.x = view.bounds.height
-//            }
-//        } else if toInterfaceOrientation.isPortrait {
-//            if(slideCurrentState == .Right) {
-//                animateViewToNewOriginX(rightVC!.view, posX: distanceOffset, animate: true)
-//                //rightVC?.view.frame.origin.x = distanceOffset
-//            } else {
-//                animateViewToNewOriginX(rightVC!.view, posX: view.bounds.height, animate: true)
-//                //rightVC?.view.frame.origin.x = view.bounds.height
-//            }
-//        }
-//    }
-    
     
     // MARK: - Add/Remove View Methods
     
@@ -169,10 +135,8 @@ class DVBeautySlideController: UIViewController {
             if slideLiveState == .None {
                 if moveFromLeftToRight {
                     slideLiveState = .MovingLeftPanel
-                    //addShadowOpacityToView(currentView: leftVC!.view, shadowValue: shadowValue)
                 } else {
                     slideLiveState = .MovingRightPanel
-                    //addShadowOpacityToView(currentView: rightVC!.view, shadowValue: shadowValue)
                 }
             } else {
                 if slideLiveState == .MovingLeftPanel {
@@ -237,53 +201,25 @@ class DVBeautySlideController: UIViewController {
             if showPanel {
                 var newDistanceForCenter: CGFloat = 0
                 if self.slideLiveState == .MovingLeftPanel {
-                    if self.slideCurrentState != .Left {
                         newDistanceForCenter =  CGFloat(abs(Int(CGRectGetMinX(self.leftVC!.view.frame)/2)))
                         self.centerVC.view.frame.origin.x += newDistanceForCenter
-                    } else {
-                        self.centerVC.view.frame.origin.x = self.leftVC!.view.frame.width/2
-                    }
                 } else if self.slideLiveState == .MovingRightPanel {
                     if UIDevice.currentDevice().orientation.isLandscape.boolValue {
-                        if self.slideCurrentState != .Right {
-                            newDistanceForCenter = CGFloat(abs(Int((self.distanceOffset + self.view.bounds.width - self.view.bounds.height) - CGRectGetMinX(self.rightVC!.view.frame))/2))
-                            self.centerVC.view.frame.origin.x -= newDistanceForCenter
-                        } else {
-                            self.centerVC.view.frame.origin.x = -(self.rightVC!.view.frame.width/2)
-                        }
+                        newDistanceForCenter = CGFloat(abs(Int((self.distanceOffset + self.view.bounds.width - self.view.bounds.height) - CGRectGetMinX(self.rightVC!.view.frame))/2))
+                        self.centerVC.view.frame.origin.x -= newDistanceForCenter
                     } else if UIDevice.currentDevice().orientation.isPortrait.boolValue {
-                        if self.slideCurrentState != .Right {
-                            newDistanceForCenter = CGFloat(abs(Int(self.distanceOffset - CGRectGetMinX(self.rightVC!.view.frame))/2))
-                            self.centerVC.view.frame.origin.x -= newDistanceForCenter
-                        } else {
-                            self.centerVC.view.frame.origin.x = -(self.rightVC!.view.frame.width/2)
-                        }
+                        newDistanceForCenter = CGFloat(abs(Int(self.distanceOffset - CGRectGetMinX(self.rightVC!.view.frame))/2))
+                        self.centerVC.view.frame.origin.x -= newDistanceForCenter
                     }
-                    
                 }
-                
             } else {
                 self.centerVC.view.frame.origin.x = 0
             }
             panelView.frame.origin.x = posX
             }, completion: { finished in
-                if showPanel {
-                    if self.slideLiveState == .MovingLeftPanel {
-                        self.slideCurrentState = .Left
-                    } else if self.slideLiveState == .MovingRightPanel {
-                        self.slideCurrentState = .Right
-                    }
-                } else {
+                if !showPanel {
                     if self.slideLiveState != .None {
-//                        if self.slideLiveState == .MovingLeftPanel {
-//                            self.removeShadowOpacityToView(self.leftVC!.view)
-//                        } else if self.slideLiveState == .MovingRightPanel {
-//                            self.removeShadowOpacityToView(self.rightVC!.view)
-//                        }
                         self.slideLiveState = .None
-                    }
-                    if self.slideCurrentState != .None {
-                        self.slideCurrentState = .None
                     }
                 }
         })
